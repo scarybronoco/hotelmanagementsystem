@@ -3,22 +3,25 @@ from flask_login import UserMixin
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
 from werkzeug.security import generate_password_hash, check_password_hash
-from wtforms import StringField, SubmitField, PasswordField,BooleanField, ValidationError, TextAreaField
+from wtforms import StringField, SubmitField, PasswordField, BooleanField, ValidationError, TextAreaField
 from wtforms.validators import DataRequired, EqualTo, Length
 from datetime import datetime
+from flask_migrate import Migrate
 
 # Flask Instance
 app = Flask(__name__)
 # Add Database
-# old sqlite DB
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
-# New MySQl DB
-# app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql://root:scary123@localhost/users'
+#  sqlite DB
+# app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+# mysql db
+app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:scary123@localhost/our_users'
+
 # Secret key
 app.config['SECRET_KEY'] = "powertripbyjcole"
 # Initialize the database
 db = SQLAlchemy(app)
 app.app_context().push()
+migrate = Migrate(app, db, render_as_batch=True)
 
 
 # Create model
@@ -27,7 +30,7 @@ class Users(db.Model):
     name = db.Column(db.String(20), nullable=False)
     email = db.Column(db.String(120), nullable=False, unique=True)
     date_added = db.Column(db.DateTime, default=datetime.utcnow)
-    password_hash = db.Column(db.String(20))
+    password_hash = db.Column(db.String(160))
 
     @property
     def password(self):
@@ -71,7 +74,8 @@ def delete(id):
 class UserForm(FlaskForm):
     name = StringField("Name", validators=[DataRequired()])
     email = StringField("Email", validators=[DataRequired()])
-    password_hash = PasswordField('Password', validators=[DataRequired(), EqualTo('password_hash2', message='Password must match')])
+    password_hash = PasswordField('Password',
+                                  validators=[DataRequired(), EqualTo('password_hash2', message='Password must match')])
     password_hash2 = PasswordField('Confirm Password', validators=[DataRequired()])
     submit = SubmitField("Submit")
 
@@ -89,12 +93,14 @@ def add_user():
     if form.validate_on_submit():
         user = Users.query.filter_by(email=form.email.data).first()
         if user is None:
-            user = Users(name=form.name.data, email=form.email.data)
+            hashed_pw = generate_password_hash(form.password_hash.data, "sha256")
+            user = Users(name=form.name.data, email=form.email.data, password_hash=hashed_pw)
             db.session.add(user)
             db.session.commit()
         name = form.name.data
         form.name.data = ''
         form.email.data = ''
+        form.password_hash = ''
         flash("User added successfully")
     our_user = Users.query.order_by(Users.date_added)
     return render_template("add_user.html",
