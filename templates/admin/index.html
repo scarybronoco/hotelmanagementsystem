@@ -18,7 +18,6 @@
                         <th>Email</th>
                         <th>Country</th>
                         <th>Room</th>
-                        <th>Bedding</th>
                         <th>Number of rooms</th>
 						<th>Check in</th>
 						<th>Check out</th>
@@ -32,7 +31,6 @@
                         <td>{{reservation.email}}</td>
                         <td>{{reservation.nationality}}</td>
                         <td>{{reservation.type_of_room}}</td>
-                        <td>{{reservation.Bedding_type}}</td>
                         <td>{{reservation.Number_of_rooms}}</td>
                         <td>{{reservation.check_in}}</td>
                         <td>{{reservation.check_out}}</td>
@@ -40,8 +38,8 @@
                             {% if reservation.status == 1 %}
                             Approved
                             {% else %}
-                            <a href="/admin/approve-user/{{reservation   .id}}">
-                                <button class="btn btn-warning">Approve</button>
+                            <a href="/admin/approve-user/{{reservation.id}}">
+                                <button class="btn btn-warning">Approved</button>
                             </a>
                             {% endif %}
                         </td>

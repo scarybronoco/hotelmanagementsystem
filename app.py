@@ -95,7 +95,7 @@ class Reservation(db.Model):
     Number_of_rooms = db.Column(db.String(100), nullable=False)
     check_in = db.Column(db.String(100), nullable=False)
     check_out = db.Column(db.String(100), nullable=False)
-    status = db.Column(db.Integer, default=1, nullable=False)
+    status = db.Column(db.Integer, default=0, nullable=False)
 
 
 class Admin(db.Model):
@@ -217,7 +217,6 @@ def update(id):
 
 @app.route("/")
 def home():
-    # first_name = 'John'
     return render_template('home.html')
 
 
@@ -282,88 +281,6 @@ def dashboard():
     return render_template('dashboard.html', form=form, name_to_update=name_to_update)
 
 
-# @app.route("/admin")
-# def admin():
-#     return render_template('admin.html')
-
-
-# @app.route('/admin/', methods=['GET', 'POST'])
-# def adminIndex():
-#     form = LoginForm()
-#     if form.validate_on_submit():
-#         admin = Users.query.filter_by(username=form.username.data).first()
-#         if admin:
-#             if check_password_hash(user.password_hash, form.password.data):
-#                 login_user(user)
-#                 flash("Login Successful!!")
-#                 return redirect('')
-#             else:
-#                 flash("Wrong Username or Password -- Try Again")
-#         else:
-#             flash("User dont exist")
-#     return render_template('admin/index.html', form=form)
-
-
-# @app.route("/accept/<int:id>")
-# def accept(id):
-#     d = Reservation.query.get(id)
-#     apt = Reservation.query.filter_by(id=id).first()
-#     add = Accepted(name=apt.first_name, email=apt.email, country=apt.nationality, type_of_room=apt.type_of_room,
-#                    bedding=apt.Bedding_Type, number_of_room=apt.Number_of_rooms, check_in=apt.check_in,
-#                    check_out=apt.check_out)
-#     db.session.add(add)
-#     db.session.delete(d)
-#     db.session.commit()
-#     return redirect("/")
-
-
-# @app.route("/accepted")
-# def accepted():
-#     msg = ("Login First")
-#     if session.get('username'):
-#         record = Accepted.query.all()
-#
-#     return render_template("admin/accept.html", record=record)
-
-
-# @app.route("/reject/<int:id>")
-# def reject(id):
-#     d = Reservation.query.get(id)
-#     apt = Reservation.query.filter_by(id=id).first()
-#     add = Reject(name=apt.first_name, email=apt.email, country=apt.nationality, type_of_room=apt.type_of_room,
-#                  bedding=apt.Bedding_Type, number_of_room=apt.Number_of_rooms, check_in=apt.check_in,
-#                  check_out=apt.check_out)
-#     db.session.add(add)
-#     db.session.delete(d)
-#     db.session.commit()
-#     return redirect("/")
-
-
-# @app.route("/rejected")
-# def rejected():
-#     msg = ("Login First")
-#     if session.get('username'):
-#         record = Reject.query.all()
-#         return render_template("admin/reject.html", record=record)
-#     return render_template("admin/login.html", msg=msg)
-#
-#
-# @app.route("/Delete/<int:id>")
-# def delete_accept(id):
-#     d = Accepted.query.get(id)
-#     db.session.delete(d)
-#     db.session.commit()
-#     return redirect("/accepted")
-#
-#
-# @app.route("/reject_delete/<int:id>")
-# def delete_reject(id):
-#     d = Reject.query.get(id)
-#     db.session.delete(d)
-#     db.session.commit()
-#     return redirect("/rejected")
-
-
 @app.route("/user/<name>")
 def user(name):
     return render_template('user.html', name=name)
@@ -372,31 +289,6 @@ def user(name):
 @app.route("/room_price")
 def room_price():
     return render_template('room_price.html')
-
-
-# @app.route('/adminsignup', methods=['GET', 'POST'])
-# def admin_signup():
-#     name = None
-#     form = AdminForm()
-#     if form.validate_on_submit():
-#         admin = AdminSignup.query.filter_by(email=form.email.data).first()
-#         if admin is None:
-#             hashed_pw = generate_password_hash(form.password_hash.data, "sha256")
-#             admin = AdminSignup(username=form.username.data, name=form.name.data, email=form.email.data,
-#                                 password_hash=hashed_pw)
-#             db.session.add(admin)
-#             db.session.commit()
-#         name = form.name.data
-#         form.name.data = ''
-#         form.username.data = ''
-#         form.email.data = ''
-#         form.password_hash = ''
-#         flash("User added successfully")
-#     our_user = AdminSignup.query.order_by(AdminSignup.date_added)
-#     return render_template("/admin/admin_signup.html",
-#                            form=form,
-#                            name=name,
-#                            our_user=our_user)
 
 
 @app.route('/admin/', methods=['GET', 'POST'])
@@ -428,7 +320,7 @@ def adminLogout():
     if not session.get('admin_id'):
         return redirect('/admin/')
     if session.get('admin_id'):
-        session['admin_id']=None
+        session['admin_id'] = None
         session['admin_name'] = None
         return redirect('/')
 
@@ -519,8 +411,6 @@ def reservation():
     # return render_template('reservation.html', form=form)
 
 
-
-
 # @app.route('/admin/index')
 # def adminIndex():
 #     if not session.get('admin_id'):
@@ -533,11 +423,12 @@ def adminGet():
     reservee = Reservation.query.all()
     return render_template('/admin/index.html', reservee=reservee)
 
+
 @app.route('/admin/approve-user/<int:id>')
 def adminApprove(id):
     if not session.get('admin_id'):
         return redirect('/admin/')
-    Reservation.query.filter_by(id=id).update({"status": 1})
+    Reservation().query.filter_by(id=id).update(dict(status=1))
     db.session.commit()
     flash('Approve Successfully')
     return redirect('/admin/index')
