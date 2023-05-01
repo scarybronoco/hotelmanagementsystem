@@ -130,29 +130,6 @@ class PostForm(FlaskForm):
     submit = SubmitField("Submit")
 
 
-class Accepted(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(100), nullable=False)
-    country = db.Column(db.String(100), nullable=False)
-    type_of_room = db.Column(db.String(100), nullable=False)
-    bedding = db.Column(db.String(100), nullable=False)
-    number_of_room = db.Column(db.String(100), nullable=False)
-    check_in = db.Column(db.String(100), nullable=False)
-    check_out = db.Column(db.String(100), nullable=False)
-
-
-class Reject(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(100), nullable=False)
-    email = db.Column(db.String(100), nullable=False)
-    country = db.Column(db.String(100), nullable=False)
-    type_of_room = db.Column(db.String(100), nullable=False)
-    bedding = db.Column(db.String(100), nullable=False)
-    number_of_room = db.Column(db.String(100), nullable=False)
-    check_in = db.Column(db.String(100), nullable=False)
-    check_out = db.Column(db.String(100), nullable=False)
-
 
 @app.route('/delete/<int:id>')
 def delete(id):
