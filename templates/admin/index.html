@@ -1,0 +1,55 @@
+{% extends "base.html"%}
+
+{% block content %}
+<div class="container">
+    <div class="my-2">
+        <form action="" method="POST" style="width:100%">
+            <div class="d-flex align-items-center">
+
+            </div>
+        </form>
+    </div>
+    <div class="my-2">
+        <div class="table-responsive">
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Country</th>
+                        <th>Room</th>
+                        <th>Bedding</th>
+                        <th>Number of rooms</th>
+						<th>Check in</th>
+						<th>Check out</th>
+						<th>Approve</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for reservation in reservee %}
+                    <tr>
+                        <td>{{reservation.first_name}} {{reservation.last_name}}</td>
+                        <td>{{reservation.email}}</td>
+                        <td>{{reservation.nationality}}</td>
+                        <td>{{reservation.type_of_room}}</td>
+                        <td>{{reservation.Bedding_type}}</td>
+                        <td>{{reservation.Number_of_rooms}}</td>
+                        <td>{{reservation.check_in}}</td>
+                        <td>{{reservation.check_out}}</td>
+                        <td>
+                            {% if reservation.status == 1 %}
+                            Approved
+                            {% else %}
+                            <a href="/admin/approve-user/{{reservation   .id}}">
+                                <button class="btn btn-warning">Approve</button>
+                            </a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock content %}
