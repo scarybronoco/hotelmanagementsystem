@@ -4,8 +4,8 @@ from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
 from flask_bcrypt import Bcrypt
 from werkzeug.security import generate_password_hash, check_password_hash
-from wtforms import StringField, SubmitField, PasswordField, BooleanField, ValidationError, TextAreaField, SelectField
-from wtforms.validators import DataRequired, EqualTo, Length, InputRequired
+from wtforms import StringField, SubmitField, PasswordField
+from wtforms.validators import DataRequired, EqualTo
 from datetime import datetime
 from flask_migrate import Migrate
 
@@ -128,7 +128,6 @@ class PostForm(FlaskForm):
     check_in = StringField("Check-in", validators=[DataRequired()])
     check_out = StringField("Check-out", validators=[DataRequired()])
     submit = SubmitField("Submit")
-
 
 
 @app.route('/delete/<int:id>')
@@ -361,38 +360,6 @@ def reservation():
     else:
         # display the form
         return render_template('reservation.html', form=form)
-
-    # if form.validate_on_submit():
-    #     reserve = Reservation(Title=form.Title.data, first_name=form.first_name.data, last_name=form.last_name.data,
-    #                           email=form.email.data, nationality=form.nationality.data, phone=form.phone.data,
-    #                           type_of_room=form.type_of_room.data, Bedding_Type=form.Bedding_Type.data,
-    #                           Number_of_rooms=form.Number_of_rooms.data, check_in=form.check_in.data,
-    #                           check_out=form.check_out.data)
-    #     form.Title.data = ''
-    #     form.first_name.data = ''
-    #     form.last_name.data = ''
-    #     form.email.data = ''
-    #     form.nationality.data = ''
-    #     form.phone.data = ''
-    #     form.type_of_room.data = ''
-    #     form.Bedding_Type.data = ''
-    #     form.Number_of_rooms.data = ''
-    #     form.check_in.data = ''
-    #     form.check_out.data = ''
-    #
-    #     db.session.add(reserve)
-    #     db.session.commit()
-    #
-    #     flash("Booking successful")
-    #
-    # return render_template('reservation.html', form=form)
-
-
-# @app.route('/admin/index')
-# def adminIndex():
-#     if not session.get('admin_id'):
-#         return redirect('/admin/')
-#     return render_template('/admin/index.html')
 
 
 @app.route('/admin/index', methods=['GET', 'POST'])
