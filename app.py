@@ -1,12 +1,9 @@
 from flask import Flask, render_template, request, redirect, flash, url_for, session
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy
-from flask_wtf import FlaskForm
 from webforms import LoginForm, AdminForm, UserForm, PostForm
 from flask_bcrypt import Bcrypt
 from werkzeug.security import generate_password_hash, check_password_hash
-from wtforms import StringField, SubmitField, PasswordField
-from wtforms.validators import DataRequired, EqualTo
 from datetime import datetime
 from flask_migrate import Migrate
 
