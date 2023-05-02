@@ -1,7 +1,9 @@
+import os
 from flask import Flask, render_template, request, redirect, flash, url_for, session
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
+from webforms import LoginForm, AdminForm, UserForm, PostForm
 from flask_bcrypt import Bcrypt
 from werkzeug.security import generate_password_hash, check_password_hash
 from wtforms import StringField, SubmitField, PasswordField
@@ -115,20 +117,6 @@ class Admin(db.Model):
 # db.session.commit()
 
 
-class PostForm(FlaskForm):
-    Title = StringField("Title", validators=[DataRequired()])
-    first_name = StringField("First name", validators=[DataRequired()])
-    last_name = StringField("Last name", validators=[DataRequired()])
-    email = StringField("Email", validators=[DataRequired()])
-    nationality = StringField("Nationality", validators=[DataRequired()])
-    phone = StringField("Phone", validators=[DataRequired()])
-    type_of_room = StringField("Type of room", validators=[DataRequired()])
-    Bedding_Type = StringField("Bedding type", validators=[DataRequired()])
-    Number_of_rooms = StringField("Number of rooms", validators=[DataRequired()])
-    check_in = StringField("Check-in", validators=[DataRequired()])
-    check_out = StringField("Check-out", validators=[DataRequired()])
-    submit = SubmitField("Submit")
-
 
 @app.route('/delete/<int:id>')
 def delete(id):
@@ -152,24 +140,10 @@ def delete(id):
                                form=form, name=name, our_user=our_user)
 
 
-class UserForm(FlaskForm):
-    name = StringField("Name", validators=[DataRequired()])
-    username = StringField("Username", validators=[DataRequired()])
-    email = StringField("Email", validators=[DataRequired()])
-    password_hash = PasswordField('Password',
-                                  validators=[DataRequired(), EqualTo('password_hash2', message='Password must match')])
-    password_hash2 = PasswordField('Confirm Password', validators=[DataRequired()])
-    submit = SubmitField("Submit")
 
 
-class AdminForm(FlaskForm):
-    name = StringField("Name", validators=[DataRequired()])
-    username = StringField("Username", validators=[DataRequired()])
-    email = StringField("Email", validators=[DataRequired()])
-    password_hash = PasswordField('Password',
-                                  validators=[DataRequired(), EqualTo('password_hash2', message='Password must match')])
-    password_hash2 = PasswordField('Confirm Password', validators=[DataRequired()])
-    submit = SubmitField("Submit")
+
+
 
 
 @app.route('/update/<int:id>', methods=['GET', 'POST'])
@@ -198,10 +172,7 @@ def home():
 
 # in bracket (first_name=first_name)
 
-class LoginForm(FlaskForm):
-    username = StringField("Username", validators=[DataRequired()])
-    password = PasswordField("Password", validators=[DataRequired()])
-    submit = SubmitField("Submit")
+
 
 
 # Create Login page
