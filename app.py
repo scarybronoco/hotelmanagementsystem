@@ -1,4 +1,3 @@
-import os
 from flask import Flask, render_template, request, redirect, flash, url_for, session
 from flask_login import UserMixin, login_user, LoginManager, login_required, logout_user, current_user
 from flask_sqlalchemy import SQLAlchemy
@@ -10,7 +9,7 @@ from wtforms import StringField, SubmitField, PasswordField
 from wtforms.validators import DataRequired, EqualTo
 from datetime import datetime
 from flask_migrate import Migrate
-
+import os
 # Flask Instance
 app = Flask(__name__)
 # Add Database
